@@ -54,7 +54,7 @@ class CategoryResource extends Resource
                                 ->required()
                                 ->unique(ignoreRecord: true)
                                 ->maxLength(100),
-                            Forms\Components\Textarea::make('description')
+                            Forms\Components\MarkdownEditor::make('description')
                                 ->nullable(),
                         ]
                     ),
@@ -66,7 +66,7 @@ class CategoryResource extends Resource
                                 ->label('SEO Title')
                                 ->nullable()
                                 ->maxLength(100),
-                            Forms\Components\Textarea::make('seo_description')
+                            Forms\Components\MarkdownEditor::make('seo_description')
                                 ->label('SEO Description')
                                 ->nullable(),
                         ]
@@ -85,7 +85,8 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->label('Slug'),
+                    ->label('Slug')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('description'),
 
                 Tables\Columns\TextColumn::make('seo_title')

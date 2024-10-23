@@ -22,6 +22,9 @@ return new class extends Migration {
             $table->string('file_path');
             $table->string('importer');
             $table->unsignedInteger('total_rows');
+            $table->timestamp('completed_at')->nullable();
+            $table->unsignedInteger('processed_rows')->default(0);
+            $table->unsignedInteger('successful_rows')->default(0);
             $table->timestamps();
         });
     }

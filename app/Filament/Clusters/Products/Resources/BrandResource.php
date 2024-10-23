@@ -49,11 +49,18 @@ class BrandResource extends Resource
                 Forms\Components\Section::make('Infomation')
                     ->schema(
                         [
-                            Forms\Components\TextInput::make('name')
-                                ->required()
-                                ->unique(ignoreRecord: true)
-                                ->maxLength(100),
-                            Forms\Components\Textarea::make('description')
+                            Forms\Components\Section::make()
+                                ->schema(
+                                    [
+                                        Forms\Components\TextInput::make('name')
+                                            ->required()
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(100),
+                                        Forms\Components\TextInput::make('website')
+                                            ->nullable()
+                                    ]
+                                )->columns(2),
+                            Forms\Components\MarkdownEditor::make('description')
                                 ->nullable(),
                         ]
                     ),
@@ -65,7 +72,7 @@ class BrandResource extends Resource
                                 ->label('SEO Title')
                                 ->nullable()
                                 ->maxLength(100),
-                            Forms\Components\Textarea::make('seo_description')
+                            Forms\Components\MarkdownEditor::make('seo_description')
                                 ->label('SEO Description')
                                 ->nullable(),
                         ]
@@ -84,15 +91,18 @@ class BrandResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->label('Slug'),
-                Tables\Columns\TextColumn::make('description'),
+                    ->label('Slug')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('website'),
+                Tables\Columns\TextColumn::make('description')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('seo_title')
                     ->label('SEO Title'),
                 Tables\Columns\TextColumn::make('seo_description')
                     ->label('SEO Description')
-
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Active Status')
                     ->boolean(),

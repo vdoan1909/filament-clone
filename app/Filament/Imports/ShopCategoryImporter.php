@@ -7,6 +7,7 @@ use Exception;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Facades\Log;
 
 class ShopCategoryImporter extends Importer
 {
@@ -58,24 +59,22 @@ class ShopCategoryImporter extends Importer
     public function resolveRecord(): ?ShopCategory
     {
         try {
+            dd($this->data);
+
             $category = ShopCategory::firstOrNew([
                 'name' => $this->data['name'],
             ]);
 
-            $category->description = $this->data['description'] ?? null;
-            $category->seo_title = $this->data['seo_title'] ?? null;
-            $category->seo_description = $this->data['seo_description'] ?? null;
-            $category->is_active = $this->data['is_active'] ?? null;
-
+            $category->fill($this->data);
             $category->save();
 
             return $category;
         } catch (Exception $e) {
-            dd($e);
+            Log::error('Import Error: ' . $e->getMessage());
+            throw $e;
         }
-
-        // return new ShopCategory();
     }
+
 
     // in ra thông báo
     public static function getCompletedNotificationBody(Import $import): string

@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('shop_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('slug', 120)->nullable();
+            $table->string('name', 100)->unique();
+            $table->string('slug', 120)->unique();
             $table->text('description', );
             $table->boolean('is_active')->default(false);
             $table->string('seo_title', 100)->nullable();;
