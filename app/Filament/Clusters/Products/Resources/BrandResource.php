@@ -4,7 +4,6 @@ namespace App\Filament\Clusters\Products\Resources;
 
 use App\Filament\Clusters\Products;
 use App\Filament\Clusters\Products\Resources\BrandResource\Pages;
-use App\Filament\Clusters\Products\Resources\BrandResource\RelationManagers;
 use App\Models\Shop\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\Products\Resources\BrandResource\RelationManagers\ProductsRelationManager;
 
 class BrandResource extends Resource
 {
@@ -169,7 +169,7 @@ class BrandResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class
         ];
     }
 

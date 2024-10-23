@@ -1,57 +1,29 @@
 <?php
 
-namespace App\Filament\Clusters\Products\Resources;
+namespace App\Filament\Clusters\Products\Resources\CategoryResource\RelationManagers;
 
-use App\Filament\Clusters\Products;
-use App\Filament\Clusters\Products\Resources\ProductResource\Pages;
 use App\Models\Shop\Brand;
-use App\Models\Shop\Product;
 use App\Models\Shop\ShopCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Filters\QueryBuilder;
-use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Filament\Tables\Filters\QueryBuilder\Constraints\BooleanConstraint;
+use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\NumberConstraint;
-use Illuminate\Database\Eloquent\Model;
 
-class ProductResource extends Resource
+class ProductsRelationManager extends RelationManager
 {
-    protected static ?string $model = Product::class;
+    protected static string $relationship = 'products';
 
-    protected static ?string $navigationIcon = 'heroicon-o-bolt';
-
-    protected static ?string $cluster = Products::class;
-    protected static ?string $navigationLabel = 'Products';
-    protected static ?string $modelLabel = 'Products';
-    protected static ?string $slug = 'products';
-    protected static ?int $navigationSort = 1;
-
-    protected static ?string $recordTitleAttribute = 'name';
-
-    public static function getGlobalSearchResultTitle(Model $record): string
-    {
-        return 'Product';
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        return [
-            'Product Name' => $record->name,
-            'Product Price' => $record->price,
-            'Product Quantity' => $record->quantity,
-        ];
-    }
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -109,6 +81,8 @@ class ProductResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('seo_title')
                                     ->label('SEO Title')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
                                     ->maxLength(100),
 
                                 Forms\Components\MarkdownEditor::make('seo_description')
@@ -169,9 +143,10 @@ class ProductResource extends Resource
             ->columns(3);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Image'),
@@ -192,8 +167,7 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('sku')
-                    ->label('SKU')
-                    ->searchable(),
+                    ->label('SKU'),
 
                 Tables\Columns\TextColumn::make('description')
                     ->label('Description')
@@ -240,26 +214,11 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('brand')
-                    ->relationship('brand', 'name')
-                    ->options(
-                        fn() => Brand::where('is_active', 1)
-                            ->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->preload(),
-
-                \Filament\Tables\Filters\SelectFilter::make('shop_category')
-                    ->relationship('shop_category', 'name')
-                    ->options(
-                        fn() => ShopCategory::where('is_active', 1)
-                            ->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->preload(),
-
                 QueryBuilder::make()
                     ->constraints([
+                        TextConstraint::make('name'),
+                        TextConstraint::make('sku')
+                            ->label('SKU'),
                         NumberConstraint::make('old_price')
                             ->label('Old price')
                             ->icon('heroicon-m-currency-dollar'),
@@ -318,22 +277,5 @@ class ProductResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            // 'view' => Pages\ViewProduct::route('/{record}'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
-        ];
     }
 }

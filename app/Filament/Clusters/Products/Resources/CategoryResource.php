@@ -5,6 +5,7 @@ namespace App\Filament\Clusters\Products\Resources;
 use App\Filament\Clusters\Products;
 use App\Filament\Clusters\Products\Resources\CategoryResource\Pages;
 use App\Filament\Clusters\Products\Resources\CategoryResource\RelationManagers;
+use App\Filament\Clusters\Products\Resources\CategoryResource\RelationManagers\ProductsRelationManager;
 use App\Models\Shop\ShopCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -166,7 +167,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class
         ];
     }
 

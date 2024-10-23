@@ -3,10 +3,13 @@
 namespace App\Models\Shop;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'shop_category_id',
         'brand_id',
@@ -33,6 +36,20 @@ class Product extends Model
 
         static::updating(function ($product) {
             $product->slug = Str::slug($product->name);
+
+            if ($product->isDirty('image')) {
+                if ($product->getOriginal('image')) {
+                    Storage::delete($product->getOriginal('image'));
+                }
+            }
+        });
+
+        static::deleting(function ($product) {
+            if ($product->isForceDeleting()) {
+                if ($product->image) {
+                    Storage::delete($product->image);
+                }
+            }
         });
     }
 
