@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasTranslations;
     protected $fillable = [
         'shop_category_id',
         'brand_id',
@@ -27,6 +28,8 @@ class Product extends Model
         'is_active',
         'is_stock'
     ];
+
+    public $translatable = ['name', 'description', 'seo_title', 'seo_description'];
 
     public static function booted()
     {

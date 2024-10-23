@@ -9,6 +9,7 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateProduct extends CreateRecord
 {
+    use CreateRecord\Concerns\Translatable;
     protected static string $resource = ProductResource::class;
 
     protected function getCreatedNotification(): Notification|null

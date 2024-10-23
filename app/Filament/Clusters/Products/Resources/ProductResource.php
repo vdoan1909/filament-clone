@@ -22,9 +22,11 @@ use Filament\Tables\Filters\QueryBuilder\Constraints\BooleanConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\NumberConstraint;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\Concerns\Translatable;
 
 class ProductResource extends Resource
 {
+    use Translatable;
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
