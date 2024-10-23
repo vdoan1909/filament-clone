@@ -14,6 +14,12 @@ class ListBrands extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+
+            Actions\Action::make('trash')
+                ->label('View Trash')
+                ->url(route('filament.admin.products.resources.brands.trash'))
+                ->icon('heroicon-o-trash')
+                ->color('gray'),
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Filament\Clusters\Products\Resources\BrandResource\RelationManagers;
 use App\Models\Shop\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -114,8 +115,39 @@ class BrandResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\EditAction::make()
+                    ->visible(fn($record) => !$record->trashed()),
+
+                Tables\Actions\DeleteAction::make()
+                    ->label('Soft Delete')
+                    ->visible(fn($record) => !$record->trashed())
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Soft Delete')
+                            ->body('Soft Delete successfully')
+                    ),
+
+                Tables\Actions\RestoreAction::make()
+                    ->label('Restore')
+                    ->visible(fn($record) => $record->trashed())
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Restore')
+                            ->body('Restore successfully')
+                    ),
+
+                Tables\Actions\ForceDeleteAction::make()
+                    ->label('Force Delete')
+                    ->visible(fn($record) => $record->trashed())
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Force Delete')
+                            ->body('Force Delete successfully')
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -136,8 +168,9 @@ class BrandResource extends Resource
         return [
             'index' => Pages\ListBrands::route('/'),
             'create' => Pages\CreateBrand::route('/create'),
-            'view' => Pages\ViewBrand::route('/{record}'),
+            // 'view' => Pages\ViewBrand::route('/{record}'),
             'edit' => Pages\EditBrand::route('/{record}/edit'),
+            'trash' => Pages\TrashBrands::route('/trash'),
         ];
     }
 }
