@@ -26,13 +26,14 @@ return new class extends Migration {
             $table->string('name', 100)->unique();
             $table->string('slug', 120)->unique();
             $table->string('sku', 15)->unique();
+            $table->string('image');
             $table->text('description')->nullable();
             $table->decimal('old_price', 10, 2)->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->unsignedBigInteger('quantity')->default(0);
             $table->date('published_at')->useCurrent();
-            $table->string('seo_title', 100);
-            $table->text('seo_description');
+            $table->string('seo_title', 100)->nullable();
+            $table->text('seo_description')->nullable();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_stock')->default(true);
             

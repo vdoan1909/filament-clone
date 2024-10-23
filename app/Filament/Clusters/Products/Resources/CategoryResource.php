@@ -104,6 +104,7 @@ class CategoryResource extends Resource
                     ->label('Created At')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
                     ->label('Updated At')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

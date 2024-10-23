@@ -30,7 +30,7 @@ class Brand extends Model
         });
     }
 
-    protected $cats = [
+    protected $casts = [
         'is_active' => 'boolean',
     ];
 }
