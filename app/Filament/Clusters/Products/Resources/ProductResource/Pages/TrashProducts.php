@@ -3,17 +3,17 @@
 namespace App\Filament\Clusters\Products\Resources\ProductResource\Pages;
 
 use App\Filament\Clusters\Products\Resources\ProductResource;
+use App\Models\Shop\Product;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
-class ViewProduct extends ViewRecord
+class TrashProducts extends ListRecords
 {
     protected static string $resource = ProductResource::class;
 
-    protected function getHeaderActions(): array
+    protected function getTableQuery(): Builder
     {
-        return [
-            Actions\EditAction::make(),
-        ];
+        return Product::onlyTrashed();
     }
 }

@@ -22,11 +22,9 @@ use Filament\Tables\Filters\QueryBuilder\Constraints\BooleanConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\NumberConstraint;
 use Illuminate\Database\Eloquent\Model;
-use Filament\Resources\Concerns\Translatable;
 
 class ProductResource extends Resource
 {
-    use Translatable;
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
@@ -39,9 +37,18 @@ class ProductResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGlobalSearchAttributes(): array
+    {
+        return [
+            'name',
+            'price',
+            'quantity'
+        ];
+    }
+
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return 'Product';
+        return $record->name;
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -260,6 +267,22 @@ class ProductResource extends Resource
                     ->searchable()
                     ->preload(),
 
+                \Filament\Tables\Filters\SelectFilter::make('is_active')
+                    ->label('Active Status')
+                    ->native(false)
+                    ->options([
+                        1 => 'Active',
+                        0 => 'Inactive',
+                    ]),
+
+                \Filament\Tables\Filters\SelectFilter::make('is_stock')
+                    ->label('Stock Status')
+                    ->native(false)
+                    ->options([
+                        1 => 'In Stock',
+                        0 => 'Out Of Stock',
+                    ]),
+
                 QueryBuilder::make()
                     ->constraints([
                         NumberConstraint::make('old_price')
@@ -269,14 +292,10 @@ class ProductResource extends Resource
                             ->icon('heroicon-m-currency-dollar'),
                         NumberConstraint::make('quantity')
                             ->label('Quantity'),
-                        BooleanConstraint::make('is_active')
-                            ->label('Active Status'),
-                        BooleanConstraint::make('is_stock')
-                            ->label('Stock Status'),
                         DateConstraint::make('published_at')
                             ->label('Published At'),
                     ])
-                    ->constraintPickerColumns(3),
+                    ->constraintPickerColumns(2),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->actions([
@@ -336,6 +355,7 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             // 'view' => Pages\ViewProduct::route('/{record}'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'trash' => Pages\TrashProducts::route('/trash'),
         ];
     }
 }
