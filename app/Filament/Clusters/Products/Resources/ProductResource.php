@@ -236,6 +236,11 @@ class ProductResource extends Resource
                     ->label('Quantity')
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('security_stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('Published At')
                     ->sortable()
@@ -309,6 +314,8 @@ class ProductResource extends Resource
                             ->icon('heroicon-m-currency-dollar'),
                         NumberConstraint::make('quantity')
                             ->label('Quantity'),
+                        NumberConstraint::make('security_stock')
+                            ->label('Stock'),
                         DateConstraint::make('published_at')
                             ->label('Published At'),
                     ])

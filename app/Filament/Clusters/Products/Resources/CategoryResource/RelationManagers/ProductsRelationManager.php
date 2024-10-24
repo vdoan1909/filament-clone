@@ -31,10 +31,20 @@ class ProductsRelationManager extends RelationManager
                     ->schema([
                         Forms\Components\Section::make()
                             ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(100),
+                                Forms\Components\Section::make()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')
+                                            ->required()
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(100),
+
+                                        Forms\Components\TextInput::make('sku')
+                                            ->label('SKU')
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(15)
+                                            ->default(strtoupper(Str::random(8)))
+                                            ->readOnly(),
+                                    ])->columns(2),
 
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full')
@@ -62,18 +72,15 @@ class ProductsRelationManager extends RelationManager
 
                         Forms\Components\Section::make('Inventory')
                             ->schema([
-                                Forms\Components\TextInput::make('sku')
-                                    ->label('SKU')
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(15)
-                                    ->default(strtoupper(Str::random(8)))
-                                    ->readOnly(),
-
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
                                     ->numeric()
+                                    ->rules(['integer', 'min:0']),
+
+                                Forms\Components\TextInput::make('security_stock')
+                                    ->label('Stock')
+                                    ->numeric()
                                     ->rules(['integer', 'min:0'])
-                                    ->required()
                             ])
                             ->columns(2),
 
@@ -81,8 +88,6 @@ class ProductsRelationManager extends RelationManager
                             ->schema([
                                 Forms\Components\TextInput::make('seo_title')
                                     ->label('SEO Title')
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
                                     ->maxLength(100),
 
                                 Forms\Components\MarkdownEditor::make('seo_description')
@@ -167,7 +172,8 @@ class ProductsRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('sku')
-                    ->label('SKU'),
+                    ->label('SKU')
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('description')
                     ->label('Description')
@@ -183,6 +189,11 @@ class ProductsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('quantity')
                     ->label('Quantity')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('security_stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('Published At')
@@ -214,11 +225,42 @@ class ProductsRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('brand')
+                    ->relationship('brand', 'name')
+                    ->options(
+                        fn() => Brand::where('is_active', 1)
+                            ->pluck('name', 'id')
+                    )
+                    ->searchable()
+                    ->preload(),
+
+                \Filament\Tables\Filters\SelectFilter::make('shop_category')
+                    ->relationship('shop_category', 'name')
+                    ->options(
+                        fn() => ShopCategory::where('is_active', 1)
+                            ->pluck('name', 'id')
+                    )
+                    ->searchable()
+                    ->preload(),
+
+                \Filament\Tables\Filters\SelectFilter::make('is_active')
+                    ->label('Active Status')
+                    ->native(false)
+                    ->options([
+                        1 => 'Active',
+                        0 => 'Inactive',
+                    ]),
+
+                \Filament\Tables\Filters\SelectFilter::make('is_stock')
+                    ->label('Stock Status')
+                    ->native(false)
+                    ->options([
+                        1 => 'In Stock',
+                        0 => 'Out Of Stock',
+                    ]),
+
                 QueryBuilder::make()
                     ->constraints([
-                        TextConstraint::make('name'),
-                        TextConstraint::make('sku')
-                            ->label('SKU'),
                         NumberConstraint::make('old_price')
                             ->label('Old price')
                             ->icon('heroicon-m-currency-dollar'),
@@ -226,14 +268,12 @@ class ProductsRelationManager extends RelationManager
                             ->icon('heroicon-m-currency-dollar'),
                         NumberConstraint::make('quantity')
                             ->label('Quantity'),
-                        BooleanConstraint::make('is_active')
-                            ->label('Active Status'),
-                        BooleanConstraint::make('is_stock')
-                            ->label('Stock Status'),
+                        NumberConstraint::make('security_stock')
+                            ->label('Stock'),
                         DateConstraint::make('published_at')
                             ->label('Published At'),
                     ])
-                    ->constraintPickerColumns(3),
+                    ->constraintPickerColumns(2),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->actions([

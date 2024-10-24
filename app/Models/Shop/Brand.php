@@ -4,6 +4,7 @@ namespace App\Models\Shop;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Brand extends Model
@@ -32,9 +33,12 @@ class Brand extends Model
         static::deleting(function ($category) {
 
             if ($category->isForceDeleting()) {
+                $category->products()->withTrashed()->each(function ($product) {
+                    Storage::delete($product->image);
+                });
                 $category->products()->forceDelete();
             } else {
-                $category->products()->delete();
+                $category->products()->withTrashed()->delete();
             }
         });
 
