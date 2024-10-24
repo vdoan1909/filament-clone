@@ -60,6 +60,16 @@ class ProductResource extends Resource
         ];
     }
 
+    public function getNavigationBagde(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -68,10 +78,20 @@ class ProductResource extends Resource
                     ->schema([
                         Forms\Components\Section::make()
                             ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(100),
+                                Forms\Components\Section::make()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')
+                                            ->required()
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(100),
+
+                                        Forms\Components\TextInput::make('sku')
+                                            ->label('SKU')
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(15)
+                                            ->default(strtoupper(Str::random(8)))
+                                            ->readOnly(),
+                                    ])->columns(2),
 
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full')
@@ -99,18 +119,15 @@ class ProductResource extends Resource
 
                         Forms\Components\Section::make('Inventory')
                             ->schema([
-                                Forms\Components\TextInput::make('sku')
-                                    ->label('SKU')
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(15)
-                                    ->default(strtoupper(Str::random(8)))
-                                    ->readOnly(),
-
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
                                     ->numeric()
+                                    ->rules(['integer', 'min:0']),
+
+                                Forms\Components\TextInput::make('security_stock')
+                                    ->label('Stock')
+                                    ->numeric()
                                     ->rules(['integer', 'min:0'])
-                                    ->required()
                             ])
                             ->columns(2),
 

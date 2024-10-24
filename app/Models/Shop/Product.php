@@ -21,6 +21,7 @@ class Product extends Model
         'old_price',
         'price',
         'quantity',
+        'security_stock',
         'published_at',
         'seo_title',
         'seo_description',

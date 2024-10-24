@@ -30,6 +30,7 @@ return new class extends Migration {
             $table->decimal('old_price', 10, 2)->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->unsignedBigInteger('quantity')->default(0);
+            $table->unsignedBigInteger('security_stock')->default(0);
             $table->date('published_at')->useCurrent();
             $table->string('seo_title', 100)->nullable();
             $table->text('seo_description')->nullable();

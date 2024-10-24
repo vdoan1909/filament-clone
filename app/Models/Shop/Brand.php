@@ -28,13 +28,27 @@ class Brand extends Model
         static::updating(function ($brand) {
             $brand->slug = Str::slug($brand->name);
         });
+
+        static::deleting(function ($category) {
+
+            if ($category->isForceDeleting()) {
+                $category->products()->forceDelete();
+            } else {
+                $category->products()->delete();
+            }
+        });
+
+        static::restoring(function ($category) {
+            $category->products()->restore();
+        });
     }
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
 
-    public function products(){
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 }

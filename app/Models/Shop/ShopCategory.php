@@ -28,6 +28,19 @@ class ShopCategory extends Model
         static::updating(function ($category) {
             $category->slug = Str::slug($category->name);
         });
+
+        static::deleting(function ($category) {
+
+            if ($category->isForceDeleting()) {
+                $category->products()->forceDelete();
+            } else {
+                $category->products()->delete();
+            }
+        });
+
+        static::restoring(function ($category) {
+            $category->products()->restore();
+        });
     }
 
     protected $casts = [
