@@ -14,6 +14,12 @@ class ListCategories extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+
+            Actions\Action::make('trash')
+                ->label('View Trash')
+                ->icon('heroicon-o-trash')
+                ->url(route('filament.admin.resources.blog-categories.trash'))
+                ->color('gray'),
         ];
     }
 }
