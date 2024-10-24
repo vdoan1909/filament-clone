@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('number');
             $table->decimal('total_price', 12, 2)->nullable();
             $table->text('notes')->nullable();
+            $table->date('order_date')->useCurrent()->nullable();
 
             $table->enum(
                 'status_order',
