@@ -36,7 +36,7 @@ class EditBrand extends EditRecord
             ->warning()
             ->icon('heroicon-o-bookmark-square')
             ->title('Update Brand')
-            ->body('The brand: ' . $brand->name . ' has been created successfully')
+            ->body('The brand: ' . $brand->name . ' has been updated successfully')
             ->actions([
                 Action::make('View')
                     ->url(BrandResource::getUrl('edit', ['record' => $brand])),
