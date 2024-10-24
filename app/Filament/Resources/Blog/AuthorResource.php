@@ -17,7 +17,11 @@ class AuthorResource extends Resource
 {
     protected static ?string $model = Author::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    protected static ?string $navigationGroup = 'Blog';
+    protected static ?string $slug = 'authors';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

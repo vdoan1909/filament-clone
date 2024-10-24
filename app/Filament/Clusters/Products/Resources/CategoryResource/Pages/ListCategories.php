@@ -3,7 +3,6 @@
 namespace App\Filament\Clusters\Products\Resources\CategoryResource\Pages;
 
 use App\Filament\Clusters\Products\Resources\CategoryResource;
-use App\Filament\Imports\ShopCategoryImporter;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,10 +13,6 @@ class ListCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ImportAction::make()
-                ->importer(ShopCategoryImporter::class)
-                ->label('Import Categories'),
-
             Actions\CreateAction::make(),
 
             Actions\Action::make('trash')
