@@ -38,7 +38,7 @@ class BrandResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Brand Name' => $record->name
+            'Name' => $record->name
         ];
     }
 

@@ -40,7 +40,7 @@ class CategoryResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Category Name' => $record->name
+            'Name' => $record->name
         ];
     }
 

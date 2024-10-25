@@ -5,6 +5,8 @@ namespace App\Filament\Clusters\Products\Resources\CategoryResource\RelationMana
 use App\Models\Shop\Brand;
 use App\Models\Shop\ShopCategory;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -50,10 +52,16 @@ class ProductsRelationManager extends RelationManager
                                     ->columnSpan('full')
                             ]),
 
-                        Forms\Components\FileUpload::make('image')
-                            ->label('Image')
-                            ->required()
-                            ->directory('productImages'),
+                        Forms\Components\Section::make('Images')
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('media')
+                                    ->collection('product-images')
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->maxFiles(5)
+                                    ->hiddenLabel(),
+                            ])
+                            ->collapsible(),
 
                         Forms\Components\Section::make('Prices')
                             ->schema([
@@ -75,7 +83,6 @@ class ProductsRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
                                     ->numeric()
-                                    ->default(0)
                                     ->rules(['integer', 'min:0']),
 
                                 Forms\Components\TextInput::make('security_stock')
@@ -93,7 +100,7 @@ class ProductsRelationManager extends RelationManager
 
                                 Forms\Components\MarkdownEditor::make('seo_description')
                                     ->label('SEO Description')
-                                    ->columnSpan('full')
+                                    ->columnSpanFull()
                             ]),
 
                     ])
@@ -126,6 +133,14 @@ class ProductsRelationManager extends RelationManager
                                     ->reactive()
                             ]),
 
+                        Forms\Components\Section::make('Tags')
+                            ->schema([
+                                SpatieTagsInput::make('tags')
+                                    ->type('product')
+                                    ->label('Tags')
+                                    ->placeholder('Add product tags'),
+                            ]),
+
                         Forms\Components\Section::make('Status')
                             ->schema([
                                 Forms\Components\Toggle::make('is_active')
@@ -154,8 +169,9 @@ class ProductsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('Image'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('product-image')
+                    ->label('Image')
+                    ->collection('product-images'),
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Name')

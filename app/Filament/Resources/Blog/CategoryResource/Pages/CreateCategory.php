@@ -26,7 +26,7 @@ class CreateCategory extends CreateRecord
         $category = $this->record;
         Notification::make()
             ->success()
-            ->icon('heroicon-o-tag')
+            ->icon('heroicon-o-rectangle-stack')
             ->title('New Blog Category')
             ->body('The blog category: ' . $category->name . ' has been created successfully')
             ->actions([

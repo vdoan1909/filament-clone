@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AuthorResource extends Resource
@@ -23,6 +24,21 @@ class AuthorResource extends Resource
     protected static ?string $navigationGroup = 'Blog';
     protected static ?string $slug = 'authors';
     protected static ?int $navigationSort = 3;
+
+    // global search
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return 'Author';
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Name' => $record->name
+        ];
+    }
 
     public static function form(Form $form): Form
     {

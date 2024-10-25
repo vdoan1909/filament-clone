@@ -34,7 +34,7 @@ class EditCategory extends EditRecord
         $category = $this->record;
         Notification::make()
             ->warning()
-            ->icon('heroicon-o-tag')
+            ->icon('heroicon-o-rectangle-stack')
             ->title('Update Blog Category')
             ->body('The blog category: ' . $category->name . ' has been updated successfully')
             ->actions([

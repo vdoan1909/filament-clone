@@ -39,7 +39,7 @@ class LinkResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Link Title' => $record->title
+            'Title' => $record->title
         ];
     }
 
