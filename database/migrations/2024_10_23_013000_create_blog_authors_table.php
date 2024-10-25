@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('github_handle')->nullable();
             $table->string('twitter_handle')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

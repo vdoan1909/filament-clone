@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('slug', 120);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->string('seo_title', 100);
-            $table->text('seo_description');
+            $table->string('seo_title', 100)->nullable();
+            $table->text('seo_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Blog;
 
 use App\Filament\Resources\Blog\AuthorResource\Pages;
-use App\Filament\Resources\Blog\AuthorResource\RelationManagers;
+use App\Filament\Resources\Blog\AuthorResource\RelationManagers\PostsRelationManager;
 use App\Models\Blog\BlogAuthor;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -102,7 +102,7 @@ class AuthorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PostsRelationManager::class
         ];
     }
 
