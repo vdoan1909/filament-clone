@@ -69,7 +69,7 @@ class LinkResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->image()
                     ->required()
-                    ->directory('linkImages')
+                    ->directory('link-images')
                     ->columnSpanFull(),
 
 
