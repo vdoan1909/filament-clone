@@ -6,8 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    CONST GENDER = [
+    const GENDER = [
         'male' => 'Male',
         'female' => 'Female',
+    ];
+
+    protected $fillable = [
+        'name',
+        'email',
+        'photo',
+        'gender',
+        'phone',
+        'birthday'
     ];
 }

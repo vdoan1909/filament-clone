@@ -27,7 +27,29 @@ class CustomerResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make()
+                    ->schema(
+                        [
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                            Forms\Components\TextInput::make('email')
+                                ->label('Email Address')
+                                ->required()
+                                ->unique(ignoreRecord: true),
+                        ]
+                    )->columns(2),
+                Forms\Components\Section::make()
+                    ->schema(
+                        [
+                            Forms\Components\TextInput::make('phone')
+                                ->label('Phone Number')
+                                ->numeric(),
+                            Forms\Components\DatePicker::make('birthday')
+                                ->native(false)
+                                ->label('Birthday')
+
+                        ]
+                    )->columns(2),
             ]);
     }
 
@@ -35,7 +57,15 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(isIndividual: true),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email Address')
+                    ->searchable(isIndividual: true),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Phone Number'),
+                Tables\Columns\TextColumn::make('birthday')
+                    ->label('Birthday')
             ])
             ->filters([
                 //
