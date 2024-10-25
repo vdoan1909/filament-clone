@@ -22,7 +22,8 @@ class LinkResource extends Resource
     protected static ?string $model = Link::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
-
+    protected static ?string $navigationLabel = 'Links';
+    protected static ?string $modelLabel = 'Links';
     protected static ?string $navigationGroup = 'Blog';
     protected static ?string $slug = 'links';
     protected static ?int $navigationSort = 4;
@@ -64,7 +65,7 @@ class LinkResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                    
+
                 Forms\Components\FileUpload::make('image')
                     ->image()
                     ->required()

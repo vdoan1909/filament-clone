@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 100)->unique();
             $table->string('slug', 120)->unique();
-            $table->text('description', );
+            $table->text('description')->nullable();
             $table->boolean('is_active')->default(false);
             $table->string('seo_title', 100)->nullable();;
             $table->text('seo_description')->nullable();;

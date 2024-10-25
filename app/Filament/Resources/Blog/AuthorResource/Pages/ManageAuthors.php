@@ -4,17 +4,19 @@ namespace App\Filament\Resources\Blog\AuthorResource\Pages;
 
 use App\Filament\Resources\Blog\AuthorResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Facades\Auth;
 
-class EditAuthor extends EditRecord
+class ManageAuthors extends ManageRecords
 {
     protected static string $resource = AuthorResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

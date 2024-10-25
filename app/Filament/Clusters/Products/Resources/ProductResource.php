@@ -8,6 +8,7 @@ use App\Models\Shop\Brand;
 use App\Models\Shop\Product;
 use App\Models\Shop\ShopCategory;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -60,7 +61,7 @@ class ProductResource extends Resource
             'Product Quantity' => $record->quantity,
         ];
     }
-    
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
@@ -98,10 +99,16 @@ class ProductResource extends Resource
                                     ->columnSpan('full')
                             ]),
 
-                        Forms\Components\FileUpload::make('image')
-                            ->label('Image')
-                            ->required()
-                            ->directory('productImages'),
+                        Forms\Components\Section::make('Images')
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('media')
+                                    ->collection('product-images')
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->maxFiles(5)
+                                    ->hiddenLabel(),
+                            ])
+                            ->collapsible(),
 
                         Forms\Components\Section::make('Prices')
                             ->schema([
@@ -122,7 +129,6 @@ class ProductResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
-                                    ->default(0)
                                     ->numeric()
                                     ->rules(['integer', 'min:0']),
 
@@ -209,8 +215,9 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('Image'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('product-image')
+                    ->label('Image')
+                    ->collection('product-images'),
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Name')

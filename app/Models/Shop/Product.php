@@ -6,18 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use SoftDeletes, HasTags;
+    use SoftDeletes, HasTags, InteractsWithMedia;
     protected $fillable = [
         'shop_category_id',
         'brand_id',
         'name',
         'slug',
         'sku',
-        'image',
         'description',
         'old_price',
         'price',
@@ -38,20 +39,6 @@ class Product extends Model
 
         static::updating(function ($product) {
             $product->slug = Str::slug($product->name);
-
-            if ($product->isDirty('image')) {
-                if ($product->getOriginal('image')) {
-                    Storage::delete($product->getOriginal('image'));
-                }
-            }
-        });
-
-        static::deleting(function ($product) {
-            if ($product->isForceDeleting()) {
-                if ($product->image) {
-                    Storage::delete($product->image);
-                }
-            }
         });
     }
 

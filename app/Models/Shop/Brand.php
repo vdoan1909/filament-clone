@@ -33,9 +33,6 @@ class Brand extends Model
         static::deleting(function ($brand) {
 
             if ($brand->isForceDeleting()) {
-                $brand->products()->withTrashed()->each(function ($product) {
-                    Storage::delete($product->image);
-                });
                 $brand->products()->forceDelete();
             } else {
                 $brand->products()->withTrashed()->delete();

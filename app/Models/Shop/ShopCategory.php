@@ -34,9 +34,6 @@ class ShopCategory extends Model
         static::deleting(function ($category) {
 
             if ($category->isForceDeleting()) {
-                $category->products()->withTrashed()->each(function ($product) {
-                    Storage::delete($product->image);
-                });
                 $category->products()->forceDelete();
             } else {
                 $category->products()->withTrashed()->delete();

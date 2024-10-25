@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Blog;
 
 use App\Filament\Resources\Blog\AuthorResource\Pages;
 use App\Filament\Resources\Blog\AuthorResource\RelationManagers;
-use App\Models\Blog\Author;
+use App\Models\Blog\BlogAuthor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,10 +15,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AuthorResource extends Resource
 {
-    protected static ?string $model = Author::class;
+    protected static ?string $model = BlogAuthor::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
+    protected static ?string $navigationLabel = 'Authors';
+    protected static ?string $modelLabel = 'Authors';
     protected static ?string $navigationGroup = 'Blog';
     protected static ?string $slug = 'authors';
     protected static ?int $navigationSort = 3;
@@ -27,7 +28,27 @@ class AuthorResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('email')
+                    ->label('Email address')
+                    ->required()
+                    ->maxLength(255)
+                    ->email()
+                    ->unique(BlogAuthor::class, 'email', ignoreRecord: true),
+
+                Forms\Components\MarkdownEditor::make('bio')
+                    ->columnSpanFull(),
+
+                Forms\Components\TextInput::make('github_handle')
+                    ->label('GitHub handle')
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('twitter_handle')
+                    ->label('Twitter handle')
+                    ->maxLength(255),
             ]);
     }
 
@@ -35,14 +56,41 @@ class AuthorResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\Layout\Stack::make([
+                        Tables\Columns\TextColumn::make('name')
+                            ->searchable()
+                            ->sortable()
+                            ->weight('medium')
+                            ->alignLeft(),
+
+                        Tables\Columns\TextColumn::make('email')
+                            ->label('Email address')
+                            ->searchable()
+                            ->sortable()
+                            ->color('gray')
+                            ->alignLeft(),
+                    ])->space(2),
+
+                    Tables\Columns\Layout\Stack::make([
+                        Tables\Columns\TextColumn::make('github_handle')
+                            ->icon('heroicon-o-gift')
+                            ->label('GitHub')
+                            ->alignLeft(),
+
+                        Tables\Columns\TextColumn::make('twitter_handle')
+                            ->icon('heroicon-o-cake')
+                            ->label('Twitter')
+                            ->alignLeft(),
+                    ])->space(2),
+                ]),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -61,10 +109,7 @@ class AuthorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAuthors::route('/'),
-            'create' => Pages\CreateAuthor::route('/create'),
-            'view' => Pages\ViewAuthor::route('/{record}'),
-            'edit' => Pages\EditAuthor::route('/{record}/edit'),
+            'index' => Pages\ManageAuthors::route('/'),
         ];
     }
 }
