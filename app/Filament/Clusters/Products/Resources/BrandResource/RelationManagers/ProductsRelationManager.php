@@ -75,6 +75,7 @@ class ProductsRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
                                     ->numeric()
+                                    ->default(0)
                                     ->rules(['integer', 'min:0']),
 
                                 Forms\Components\TextInput::make('security_stock')

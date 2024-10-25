@@ -14,8 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->string('url');
             $table->string('image');
-            $table->string('title', 100);
-            $table->text('description')->nullable();
+            $table->json('title');
+            $table->json('slug');
+            $table->string('color');
+            $table->json('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

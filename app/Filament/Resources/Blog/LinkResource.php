@@ -12,10 +12,13 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Concerns\Translatable;
 
 class LinkResource extends Resource
 {
+    use Translatable;
     protected static ?string $model = Link::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
@@ -23,6 +26,21 @@ class LinkResource extends Resource
     protected static ?string $navigationGroup = 'Blog';
     protected static ?string $slug = 'links';
     protected static ?int $navigationSort = 4;
+
+    // global search
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return 'Link';
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Link Title' => $record->title
+        ];
+    }
 
     public static function form(Form $form): Form
     {
@@ -35,17 +53,24 @@ class LinkResource extends Resource
                                 ->required()
                                 ->maxLength(100),
 
-                            Forms\Components\TextInput::make('url')
+                            Forms\Components\ColorPicker::make('color')
                                 ->required()
-                                ->maxLength(255)
+                                ->hex()
+                                ->hexColor()
                         ]
                     )->columns(2),
 
+                Forms\Components\TextInput::make('url')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                    
                 Forms\Components\FileUpload::make('image')
                     ->image()
                     ->required()
                     ->directory('linkImages')
                     ->columnSpanFull(),
+
 
                 Forms\Components\MarkdownEditor::make('description')
                     ->required()
@@ -78,6 +103,8 @@ class LinkResource extends Resource
 
                 Tables\Columns\Layout\Panel::make([
                     Tables\Columns\Layout\Split::make([
+                        Tables\Columns\ColorColumn::make('color')
+                            ->grow(false),
                         Tables\Columns\TextColumn::make('description')
                             ->color('gray'),
                     ]),

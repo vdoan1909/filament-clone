@@ -8,6 +8,7 @@ use App\Models\Shop\Brand;
 use App\Models\Shop\Product;
 use App\Models\Shop\ShopCategory;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -59,15 +60,15 @@ class ProductResource extends Resource
             'Product Quantity' => $record->quantity,
         ];
     }
-
-    public function getNavigationBagde(): ?string
+    
+    public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return 'info';
+        return static::getModel()::count() > 10 ? 'warning' : 'danger';
     }
 
     public static function form(Form $form): Form
@@ -121,6 +122,7 @@ class ProductResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('quantity')
                                     ->label('Quantity')
+                                    ->default(0)
                                     ->numeric()
                                     ->rules(['integer', 'min:0']),
 
@@ -139,7 +141,7 @@ class ProductResource extends Resource
 
                                 Forms\Components\MarkdownEditor::make('seo_description')
                                     ->label('SEO Description')
-                                    ->columnSpan('full')
+                                    ->columnSpanFull()
                             ]),
 
                     ])
@@ -170,6 +172,14 @@ class ProductResource extends Resource
                                     ->searchable()
                                     ->preload()
                                     ->reactive()
+                            ]),
+
+                        Forms\Components\Section::make('Tags')
+                            ->schema([
+                                SpatieTagsInput::make('tags')
+                                    ->type('product')
+                                    ->label('Tags')
+                                    ->placeholder('Add product tags'),
                             ]),
 
                         Forms\Components\Section::make('Status')

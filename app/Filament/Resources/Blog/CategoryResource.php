@@ -109,6 +109,7 @@ class CategoryResource extends Resource
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('is_active')
                     ->label('Filter By Status')
+                    ->native(false)
                     ->options([
                         1 => 'Active',
                         0 => 'Inactive',

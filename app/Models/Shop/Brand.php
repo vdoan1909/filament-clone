@@ -30,20 +30,20 @@ class Brand extends Model
             $brand->slug = Str::slug($brand->name);
         });
 
-        static::deleting(function ($category) {
+        static::deleting(function ($brand) {
 
-            if ($category->isForceDeleting()) {
-                $category->products()->withTrashed()->each(function ($product) {
+            if ($brand->isForceDeleting()) {
+                $brand->products()->withTrashed()->each(function ($product) {
                     Storage::delete($product->image);
                 });
-                $category->products()->forceDelete();
+                $brand->products()->forceDelete();
             } else {
-                $category->products()->withTrashed()->delete();
+                $brand->products()->withTrashed()->delete();
             }
         });
 
-        static::restoring(function ($category) {
-            $category->products()->restore();
+        static::restoring(function ($brand) {
+            $brand->products()->restore();
         });
     }
 
