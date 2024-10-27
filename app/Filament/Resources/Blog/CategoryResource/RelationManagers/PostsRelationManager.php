@@ -6,6 +6,7 @@ use App\Models\Blog\BlogAuthor;
 use App\Models\Blog\BlogCategory;
 use Filament\Forms\Components\SpatieTagsInput;
 use App\Models\Blog\Post;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -84,9 +85,7 @@ class PostsRelationManager extends RelationManager
                             ->schema([
                                 Forms\Components\DatePicker::make('published_at')
                                     ->label('Published At')
-                                    ->required()
-                                    ->native(false)
-                                    ->default(now()),
+                                    ->native(false),
 
                                 SpatieTagsInput::make('tags')
                                     ->type('product')
@@ -145,6 +144,43 @@ class PostsRelationManager extends RelationManager
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                Tables\Filters\Filter::make('published_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('published_from')
+                            ->native(false)
+                            ->label('Published From'),
+                        Forms\Components\DatePicker::make('published_until')
+                            ->native(false)
+                            ->label('Published Until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['published_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('published_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['published_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('published_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['published_from'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make('Published from ' . Carbon::parse($data['published_from'])->toFormattedDateString())
+                                ->removeField('published_from');
+                        }
+
+                        if ($data['published_until'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make('Published until ' . Carbon::parse($data['published_until'])->toFormattedDateString())
+                                ->removeField('published_until');
+                        }
+
+                        return $indicators;
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

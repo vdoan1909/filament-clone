@@ -4,7 +4,7 @@ namespace App\Filament\Clusters\Address\Resources;
 
 use App\Filament\Clusters\Address;
 use App\Filament\Clusters\Address\Resources\CountryResource\Pages;
-use App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers;
+use App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers\StatesRelationManager;
 use App\Models\Country;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -83,7 +83,7 @@ class CountryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            StatesRelationManager::class,
         ];
     }
 

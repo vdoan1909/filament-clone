@@ -1,33 +1,21 @@
 <?php
 
-namespace App\Filament\Clusters\Address\Resources;
+namespace App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers;
 
-use App\Filament\Clusters\Address;
-use App\Filament\Clusters\Address\Resources\StateResource\Pages;
-use App\Filament\Clusters\Address\Resources\StateResource\RelationManagers\CitiesRelationManager;
-use App\Models\State;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class StateResource extends Resource
+class StatesRelationManager extends RelationManager
 {
-    protected static ?string $model = State::class;
+    protected static string $relationship = 'states';
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
-    protected static ?string $navigationLabel = 'States';
-    protected static ?string $modelLabel = 'States';
-    protected static ?string $slug = 'states';
-    protected static ?int $navigationSort = 2;
-
-    protected static ?string $cluster = Address::class;
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -45,9 +33,10 @@ class StateResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('country.name')
                     ->label('Country'),
@@ -69,31 +58,17 @@ class StateResource extends Resource
                     ->preload()
                     ->searchable(),
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            CitiesRelationManager::class
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListStates::route('/'),
-            'create' => Pages\CreateState::route('/create'),
-            'view' => Pages\ViewState::route('/{record}'),
-            'edit' => Pages\EditState::route('/{record}/edit'),
-        ];
     }
 }

@@ -120,9 +120,7 @@ class PostResource extends Resource
                             ->schema([
                                 Forms\Components\DatePicker::make('published_at')
                                     ->label('Published At')
-                                    ->required()
-                                    ->native(false)
-                                    ->default(now()),
+                                    ->native(false),
 
                                 SpatieTagsInput::make('tags')
                                     ->type('product')
