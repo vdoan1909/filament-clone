@@ -2,7 +2,9 @@
 
 namespace App\Models\Blog;
 
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Tags\HasTags;
@@ -51,5 +53,10 @@ class Post extends Model
     public function blog_category()
     {
         return $this->belongsTo(BlogCategory::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }

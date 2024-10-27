@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\Shop\CustomerResource\Pages;
+namespace App\Filament\Clusters\Address\Resources\StateResource\Pages;
 
-use App\Filament\Resources\Shop\CustomerResource;
+use App\Filament\Clusters\Address\Resources\StateResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
-class EditCustomer extends EditRecord
+class EditState extends EditRecord
 {
-    protected static string $resource = CustomerResource::class;
+    protected static string $resource = StateResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -23,7 +23,7 @@ class EditCustomer extends EditRecord
     {
         return Notification::make()
             ->success()
-            ->title('Customer updated successfully')
-            ->body('Customer updated successfully');
+            ->title('State updated successfully')
+            ->body('The state has been updated successfully');
     }
 }

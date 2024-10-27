@@ -74,7 +74,6 @@ class LinkResource extends Resource
 
 
                 Forms\Components\MarkdownEditor::make('description')
-                    ->required()
                     ->columnSpanFull(),
             ]);
     }

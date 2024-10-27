@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Blog;
 
 use App\Filament\Resources\Blog\PostResource\Pages;
-use App\Filament\Resources\Blog\PostResource\RelationManagers;
+use App\Filament\Resources\Blog\PostResource\RelationManagers\CommentsRelationManager;
 use App\Models\Blog\BlogAuthor;
 use App\Models\Blog\BlogCategory;
 use App\Models\Blog\Post;
@@ -274,14 +274,15 @@ class PostResource extends Resource
     {
         return $page->generateNavigationItems([
             Pages\ViewPost::class,
-            Pages\EditPost::class
+            Pages\EditPost::class,
+            Pages\ManagePostComment::class,
         ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            CommentsRelationManager::class,
         ];
     }
 
@@ -291,6 +292,7 @@ class PostResource extends Resource
             'index' => Pages\ListPosts::route('/'),
             'create' => Pages\CreatePost::route('/create'),
             'view' => Pages\ViewPost::route('/{record}'),
+            'comments' => Pages\ManagePostComment::route('/{record}/comments'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
     }
