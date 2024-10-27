@@ -1,33 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\Shop;
+namespace App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers;
 
-use App\Filament\Resources\Shop\CustomerResource\Pages;
-use App\Filament\Resources\Shop\CustomerResource\RelationManagers;
 use App\Models\City;
-use App\Models\Shop\Customer;
 use App\Models\State;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CustomerResource extends Resource
+class CustomersRelationManager extends RelationManager
 {
-    protected static ?string $model = Customer::class;
+    protected static string $relationship = 'customers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
-
-    protected static ?string $navigationGroup = 'Shop';
-    protected static ?string $slug = 'customers';
-    protected static ?int $navigationSort = 2;
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -115,9 +106,10 @@ class CustomerResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\ImageColumn::make('photo')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -158,10 +150,10 @@ class CustomerResource extends Resource
                     ->preload()
                     ->searchable(),
 
-                    \Filament\Tables\Filters\SelectFilter::make('state_id')
+                \Filament\Tables\Filters\SelectFilter::make('state_id')
                     ->label('State')
                     ->native(false)
-                    ->relationship('state', 'name')                    
+                    ->relationship('state', 'name')
                     ->preload()
                     ->searchable(),
 
@@ -172,31 +164,17 @@ class CustomerResource extends Resource
                     ->preload()
                     ->searchable()
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListCustomers::route('/'),
-            'create' => Pages\CreateCustomer::route('/create'),
-            'view' => Pages\ViewCustomer::route('/{record}'),
-            'edit' => Pages\EditCustomer::route('/{record}/edit'),
-        ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Filament\Clusters\Address\Resources;
 
 use App\Filament\Clusters\Address;
 use App\Filament\Clusters\Address\Resources\CityResource\Pages;
-use App\Filament\Clusters\Address\Resources\CityResource\RelationManagers;
+use App\Filament\Clusters\Address\Resources\CityResource\RelationManagers\CustomersRelationManager;
 use App\Models\City;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -82,7 +82,7 @@ class CityResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CustomersRelationManager::class
         ];
     }
 

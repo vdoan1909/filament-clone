@@ -5,6 +5,7 @@ namespace App\Filament\Clusters\Address\Resources;
 use App\Filament\Clusters\Address;
 use App\Filament\Clusters\Address\Resources\CountryResource\Pages;
 use App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers\StatesRelationManager;
+use App\Filament\Clusters\Address\Resources\CountryResource\RelationManagers\CustomersRelationManager;
 use App\Models\Country;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -84,6 +85,7 @@ class CountryResource extends Resource
     {
         return [
             StatesRelationManager::class,
+            CustomersRelationManager::class,
         ];
     }
 

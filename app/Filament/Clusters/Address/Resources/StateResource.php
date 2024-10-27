@@ -6,6 +6,7 @@ use App\Filament\Clusters\Address;
 use App\Filament\Clusters\Address\Resources\StateResource\Pages;
 use App\Filament\Clusters\Address\Resources\StateResource\RelationManagers\CitiesRelationManager;
 use App\Models\State;
+use App\Filament\Clusters\Address\Resources\StateResource\RelationManagers\CustomersRelationManager;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -83,7 +84,8 @@ class StateResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CitiesRelationManager::class
+            CitiesRelationManager::class,
+            CustomersRelationManager::class,
         ];
     }
 
