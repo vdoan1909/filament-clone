@@ -148,11 +148,6 @@ class ProductsRelationManager extends RelationManager
                                     ->helperText('This product will be hidden from all sales channels.')
                                     ->default(false),
 
-                                Forms\Components\Toggle::make('is_stock')
-                                    ->label('Stock Status')
-                                    ->helperText('Is this product still in stock?')
-                                    ->default(true),
-
                                 Forms\Components\DatePicker::make('published_at')
                                     ->label('Published At')
                                     ->default(now())
@@ -228,10 +223,6 @@ class ProductsRelationManager extends RelationManager
                     ->label('Active Status')
                     ->boolean(),
 
-                Tables\Columns\IconColumn::make('is_stock')
-                    ->label('Stock Status')
-                    ->boolean(),
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Created At')
@@ -266,14 +257,6 @@ class ProductsRelationManager extends RelationManager
                     ->options([
                         1 => 'Active',
                         0 => 'Inactive',
-                    ]),
-
-                \Filament\Tables\Filters\SelectFilter::make('is_stock')
-                    ->label('Stock Status')
-                    ->native(false)
-                    ->options([
-                        1 => 'In Stock',
-                        0 => 'Out Of Stock',
                     ]),
 
                 QueryBuilder::make()

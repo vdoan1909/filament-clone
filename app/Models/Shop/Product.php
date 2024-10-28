@@ -27,8 +27,7 @@ class Product extends Model implements HasMedia
         'published_at',
         'seo_title',
         'seo_description',
-        'is_active',
-        'is_stock'
+        'is_active'
     ];
 
     public static function booted()

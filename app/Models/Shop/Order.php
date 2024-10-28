@@ -6,16 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    const STATUS_ORDERS = [
-        'new' => 'new',
-        'processing' => 'processing',
-        'shipped' => 'shipped',
-        'delivered' => 'delivered',
-        'cancelled' => 'cancelled'
+    protected $fillable = [
+        'customer_id',
+        'number',
+        'total_price',
+        'notes',
+        'order_date',
+        'status_order',
+        'status_payment',
+        'currency'
     ];
 
-    const STATUS_PAYMENTS = [
-        'unpaid' => 'unpaid',
-        'paid' => 'paid'
-    ];
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

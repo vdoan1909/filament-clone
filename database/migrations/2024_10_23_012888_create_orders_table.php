@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Shop\Customer;
 use App\Models\Shop\Order;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -15,34 +16,19 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(User::class)
+            $table->foreignIdFor(Customer::class)
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->unsignedBigInteger('number');
+            $table->string('number', 10);
             $table->decimal('total_price', 12, 2)->nullable();
             $table->text('notes')->nullable();
             $table->date('order_date')->useCurrent()->nullable();
 
-            $table->enum(
-                'status_order',
-                [
-                    Order::STATUS_ORDERS['new'],
-                    Order::STATUS_ORDERS['processing'],
-                    Order::STATUS_ORDERS['shipped'],
-                    Order::STATUS_ORDERS['delivered'],
-                    Order::STATUS_ORDERS['cancelled']
-                ]
-            )->default(Order::STATUS_ORDERS['new']);
+            $table->string('status_order', 20);
+            $table->string('status_payment', 20);
 
-            $table->enum(
-                'status_payment',
-                [
-                    Order::STATUS_PAYMENTS['unpaid'],
-                    Order::STATUS_PAYMENTS['paid']
-                ]
-            )->default(Order::STATUS_PAYMENTS['unpaid']);
-
+            $table->string('currency', 10);
             $table->timestamps();
             $table->softDeletes();
         });

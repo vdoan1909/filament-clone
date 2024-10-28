@@ -34,7 +34,6 @@ return new class extends Migration {
             $table->string('seo_title', 100)->nullable();
             $table->text('seo_description')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->boolean('is_stock')->default(true);
 
             $table->timestamps();
             $table->softDeletes();
