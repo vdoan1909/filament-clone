@@ -158,10 +158,10 @@ class CustomerResource extends Resource
                     ->preload()
                     ->searchable(),
 
-                    \Filament\Tables\Filters\SelectFilter::make('state_id')
+                \Filament\Tables\Filters\SelectFilter::make('state_id')
                     ->label('State')
                     ->native(false)
-                    ->relationship('state', 'name')                    
+                    ->relationship('state', 'name')
                     ->preload()
                     ->searchable(),
 

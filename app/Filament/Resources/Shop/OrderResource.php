@@ -29,6 +29,16 @@ class OrderResource extends Resource
     protected static ?string $slug = 'orders';
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status_order', 'New')->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'primary' : 'danger';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -80,7 +90,7 @@ class OrderResource extends Resource
                     ->summarize([
                         Tables\Columns\Summarizers\Sum::make()
                             ->money(),
-                    ]), 
+                    ]),
 
                 Tables\Columns\TextColumn::make('status_payment')
                     ->label('Payment Status')
