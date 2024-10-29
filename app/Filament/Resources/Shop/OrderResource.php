@@ -216,7 +216,6 @@ class OrderResource extends Resource
                             ->required()
                             ->options(
                                 Product::where('is_active', 1)
-                                    ->where('is_stock', 1)
                                     ->where('quantity', '>', 0)
                                     ->pluck('name', 'id')
                             )

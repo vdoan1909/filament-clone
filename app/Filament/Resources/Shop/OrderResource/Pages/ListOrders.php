@@ -31,26 +31,31 @@ class ListOrders extends ListRecords
     {
         return [
             'All' => Tab::make(),
+
             'New' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query)
                     => $query->where('status_order', 'New')
                 ),
+
             'Processing' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query)
                     => $query->where('status_order', 'Processing')
                 ),
+
             'Shipped' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query)
                     => $query->where('status_order', 'Shipped')
                 ),
+
             'Delivered' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query)
                     => $query->where('status_order', 'Delivered')
                 ),
+
             'Cancelled' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query)

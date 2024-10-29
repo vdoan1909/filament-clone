@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugin(
                 SpatieLaravelTranslatablePlugin::make()
-                    ->defaultLocales(['vi', 'en']),
+                    ->defaultLocales(['en', 'vi']),
             );
     }
 }

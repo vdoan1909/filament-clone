@@ -164,6 +164,7 @@ class DatabaseSeeder extends Seeder
                     'image' => 'link-images/meo.jpg',
                     'title' => fake()->sentence(),
                     'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)),
+                    'description' => fake()->paragraph()
                 ]
             );
         }
@@ -174,7 +175,7 @@ class DatabaseSeeder extends Seeder
                     'name' => fake()->name,
                     'email' => fake()->safeEmail,
                     'photo' => fake()->imageUrl,
-                    'bio' => 'bio 1',
+                    'bio' => 'bio ' . $i,
                     'github_handle' => 'vip' . rand(666, 999),
                     'twitter_handle' => 'vip' . rand(666, 999),
                 ]
@@ -202,6 +203,9 @@ class DatabaseSeeder extends Seeder
         $cities = City::all();
 
         for ($i = 1; $i < 61; $i++) {
+            $randomCreatedAt = \Carbon\Carbon::now()->subDays(rand(0, 365));
+            $randomUpdatedAt = (clone $randomCreatedAt)->addDays(rand(0, 30));
+
             Customer::create(
                 [
                     'country_id' => $countries->random()->id,
@@ -209,7 +213,9 @@ class DatabaseSeeder extends Seeder
                     'city_id' => $cities->random()->id,
                     'name' => fake()->name,
                     'email' => fake()->safeEmail,
-                    'photo' => 'customer-images/pp-scaled.jpg'
+                    'photo' => 'customer-images/pp-scaled.jpg',
+                    'created_at' => $randomCreatedAt,
+                    'updated_at' => $randomUpdatedAt
                 ]
             );
         }
@@ -220,8 +226,10 @@ class DatabaseSeeder extends Seeder
         $orderStatuses = OrderStatus::cases();
         $orderPayments = OrderPayment::cases();
 
-        // Generate orders
         for ($i = 1; $i < 61; $i++) {
+            $randomCreatedAt = \Carbon\Carbon::now()->subDays(rand(0, 365));
+            $randomUpdatedAt = (clone $randomCreatedAt)->addDays(rand(0, 30));
+
             $data[] = [
                 'customer_id' => $customers->random()->id,
                 'number' => 'D2-' . rand(666666, 999999),
@@ -230,6 +238,8 @@ class DatabaseSeeder extends Seeder
                 'status_order' => $orderStatuses[array_rand($orderStatuses)]->value,
                 'status_payment' => $orderPayments[array_rand($orderPayments)]->value,
                 'currency' => 'USD',
+                'created_at' => $randomCreatedAt,
+                'updated_at' => $randomUpdatedAt
             ];
         }
 
