@@ -32,9 +32,16 @@ class OrderStatsWidget extends BaseWidget
                     $data->map(fn(TrendValue $value) => $value->aggregate)
                         ->toArray()
                 ),
+
             Stat::make('Open Order', Order::whereIn('status_order', ['Processing', 'Delivered'])->count())
-            ->description('Order Processing and Delivered'),
-            Stat::make('Average Price', number_format(Order::avg('total_price'), 2, '.', '.'))
+                ->description('Order Processing and Delivered'),
+
+            Stat::make(
+                'Average Price',
+                number_format(Order::whereIn('status_order', ['Shipped', 'Delivered'])
+                    ->where('status_payment', '!=', 'Unpaid')
+                    ->avg('total_price'), 2, '.', '.')
+            )
         ];
     }
 }

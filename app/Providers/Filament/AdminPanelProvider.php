@@ -18,6 +18,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\SpatieLaravelTranslatablePlugin;
+use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -62,9 +63,12 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->databaseNotifications()
-            ->plugin(
-                SpatieLaravelTranslatablePlugin::make()
-                    ->defaultLocales(['en', 'vi']),
+            ->plugins(
+                [
+                    SpatieLaravelTranslatablePlugin::make()
+                        ->defaultLocales(['en', 'vi']),
+                    SpotlightPlugin::make(),
+                ]
             );
     }
 }

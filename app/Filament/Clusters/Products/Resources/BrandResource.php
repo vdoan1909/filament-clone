@@ -93,7 +93,8 @@ class BrandResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->label('Slug')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('website'),
+                Tables\Columns\TextColumn::make('website')
+                    ->limit(30),
                 Tables\Columns\TextColumn::make('description')
                     ->toggleable(isToggledHiddenByDefault: true),
 
